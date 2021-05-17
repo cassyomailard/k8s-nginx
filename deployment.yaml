@@ -40,7 +40,6 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  #namespace: go
   name: rabbitmq-ingress
   annotations:
     allow.http: "false"
