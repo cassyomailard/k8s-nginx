@@ -1,0 +1,54 @@
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        ports:
+        - containerPort: 15672
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 15672
+      targetPort: 15672
+
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  #namespace: go
+  name: rabbitmq-ingress
+  annotations:
+    allow.http: "false"
+spec:
+  rules:
+  - host: rabbitmq.rancher.m2mfacil.com.br
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: rabbitmq
